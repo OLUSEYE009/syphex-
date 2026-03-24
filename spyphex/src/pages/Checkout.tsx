@@ -3,10 +3,9 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, MapPin, Calendar, CheckCircle } from 'lucide-react';
 
-interface CheckoutPageProps {}
-
-const CheckoutPage = ({}: CheckoutPageProps) => {
+const CheckoutPage = () => {
   const location = useLocation();
+  const [orderRef] = useState(() => `SPX-${Date.now().toString().slice(-6)}`);
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -298,7 +297,7 @@ const CheckoutPage = ({}: CheckoutPageProps) => {
       </p>
       <div className="space-y-4">
         <p className="text-sm text-gray-500">
-          Order Reference: #SPX-{Date.now().toString().slice(-6)}
+          Order Reference: {orderRef}
         </p>
         <button
           onClick={() => navigate('/')}

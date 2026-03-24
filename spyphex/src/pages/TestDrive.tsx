@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Car, CheckCircle, User } from 'lucide-react';
 const TestDrivePage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [bookingRef] = useState(() => `TD-${Date.now().toString().slice(-6)}`);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -316,7 +317,7 @@ const TestDrivePage = () => {
       <div className="space-y-4">
         <div className="bg-[#1e2330] rounded-lg p-4 max-w-md mx-auto">
           <p className="text-sm text-gray-500 mb-2">Booking Reference</p>
-          <p className="font-bold">#TD-{Date.now().toString().slice(-6)}</p>
+          <p className="font-bold">{bookingRef}</p>
         </div>
         <div className="space-x-4">
           <button
