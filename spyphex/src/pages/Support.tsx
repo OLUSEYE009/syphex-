@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, MessageSquare, ShieldCheck, AlertTriangle, Clock } from 'lucide-react';
 
@@ -25,6 +25,47 @@ const SupportPage = () => {
   const [reminderSet, setReminderSet] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<{sender: 'user'|'agent'; message: string}[]>([]);
+
+  useEffect(() => {
+    try {
+      const supportState = localStorage.getItem('syphex-support-state');
+      if (supportState) {
+        const saved = JSON.parse(supportState);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setOrderId(saved.orderId || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setOrderStatus(saved.orderStatus || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setComplaintText(saved.complaintText || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setComplaintFeedback(saved.complaintFeedback || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setReminderDate(saved.reminderDate || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setReminderTime(saved.reminderTime || '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setReminderSet(saved.reminderSet || false);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setChatHistory(saved.chatHistory || []);
+      }
+    } catch (error) {
+      console.warn('Failed to load support state from localStorage:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    const stateToSave = {
+      orderId,
+      orderStatus,
+      complaintText,
+      complaintFeedback,
+      reminderDate,
+      reminderTime,
+      reminderSet,
+      chatHistory,
+    };
+    localStorage.setItem('syphex-support-state', JSON.stringify(stateToSave));
+  }, [orderId, orderStatus, complaintText, complaintFeedback, reminderDate, reminderTime, reminderSet, chatHistory]);
 
   const handleTrackOrder = (e: React.FormEvent) => {
     e.preventDefault();

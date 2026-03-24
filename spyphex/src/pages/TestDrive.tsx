@@ -5,18 +5,32 @@ import { ArrowLeft, Calendar, Car, CheckCircle, User } from 'lucide-react';
 
 const TestDrivePage = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [bookingRef] = useState(() => `TD-${Date.now().toString().slice(-6)}`);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    preferredCar: '',
-    testDriveDate: '',
-    testDriveTime: '',
-    location: 'main-showroom',
-    notes: '',
+  const [step, setStep] = useState(() => {
+    const saved = localStorage.getItem('syphex-testdrive-step');
+    return saved ? Number(saved) : 1;
+  });
+  const [bookingRef] = useState(() => {
+    const storedRef = localStorage.getItem('syphex-testdrive-ref');
+    if (storedRef) return storedRef;
+    const generated = `TD-${Date.now().toString().slice(-6)}`;
+    localStorage.setItem('syphex-testdrive-ref', generated);
+    return generated;
+  });
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('syphex-testdrive-formData');
+    return saved
+      ? JSON.parse(saved)
+      : {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          preferredCar: '',
+          testDriveDate: '',
+          testDriveTime: '',
+          location: 'main-showroom',
+          notes: '',
+        };
   });
 
   const cars = [
@@ -32,21 +46,49 @@ const TestDrivePage = () => {
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
+    const updated = {
+      ...formData,
       [e.target.name]: e.target.value,
-    }));
+    };
+    setFormData(updated);
+    localStorage.setItem('syphex-testdrive-formData', JSON.stringify(updated));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const saveStep = (newStep: number) => {
+    setStep(newStep);
+    localStorage.setItem('syphex-testdrive-step', String(newStep));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 3) {
-      setStep(step + 1);
-    } else {
-      // Handle final submission
-      console.log('Test drive booked:', formData);
-      setStep(4); // Success step
+      saveStep(step + 1);
+      return;
     }
+
+    // Demo submit to ProForms API endpoint
+    const payload = {
+      formName: 'SYPHEX Test Drive Booking',
+      bookingRef,
+      ...formData,
+    };
+
+    try {
+      await fetch('https://app.proforms.top/f/prf5fae9f1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      console.log('ProForms submission payload:', payload);
+    } catch (error) {
+      console.warn('ProForms submit failed (demo):', error);
+    }
+
+    setStep(4); // Success step
+    localStorage.removeItem('syphex-testdrive-formData');
+    localStorage.removeItem('syphex-testdrive-step');
   };
 
   const renderStepIndicator = () => (

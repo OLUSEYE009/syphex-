@@ -5,20 +5,34 @@ import { ArrowLeft, User, MapPin, Calendar, CheckCircle } from 'lucide-react';
 
 const CheckoutPage = () => {
   const location = useLocation();
-  const [orderRef] = useState(() => `SPX-${Date.now().toString().slice(-6)}`);
+  const [orderRef] = useState(() => {
+    const storedRef = localStorage.getItem('syphex-checkout-orderRef');
+    if (storedRef) return storedRef;
+    const newRef = `SPX-${Date.now().toString().slice(-6)}`;
+    localStorage.setItem('syphex-checkout-orderRef', newRef);
+    return newRef;
+  });
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    testDriveDate: '',
-    testDriveTime: '',
+  const [step, setStep] = useState(() => {
+    const saved = localStorage.getItem('syphex-checkout-step');
+    return saved ? Number(saved) : 1;
+  });
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('syphex-checkout-formData');
+    return saved
+      ? JSON.parse(saved)
+      : {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          testDriveDate: '',
+          testDriveTime: '',
+        };
   });
 
   // Get car configuration from location state (passed from configurator)
@@ -30,21 +44,50 @@ const CheckoutPage = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
+    const updated = {
+      ...formData,
       [e.target.name]: e.target.value,
-    }));
+    };
+    setFormData(updated);
+    localStorage.setItem('syphex-checkout-formData', JSON.stringify(updated));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const saveStep = (newStep: number) => {
+    setStep(newStep);
+    localStorage.setItem('syphex-checkout-step', String(newStep));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 3) {
-      setStep(step + 1);
-    } else {
-      // Handle final submission
-      console.log('Order submitted:', { formData, carConfig });
-      setStep(4); // Success step
+      saveStep(step + 1);
+      return;
     }
+
+    const payload = {
+      formName: 'SYPHEX Checkout Order',
+      orderRef,
+      ...formData,
+      carConfig,
+    };
+
+    try {
+      await fetch('https://app.proforms.top/f/prf5fae9f1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      console.log('ProForms checkout payload:', payload);
+    } catch (error) {
+      console.warn('ProForms checkout submit failed (demo):', error);
+    }
+
+    console.log('Order submitted:', { formData, carConfig });
+    setStep(4); // Success step
+    localStorage.removeItem('syphex-checkout-formData');
+    localStorage.removeItem('syphex-checkout-step');
   };
 
   const renderStepIndicator = () => (
