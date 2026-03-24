@@ -1,22 +1,25 @@
 import { motion } from 'framer-motion';
 import CarCard from './CarCard';
+import x1Image from '../assets/cars/SYPHEX electric car lineup in studio.png';
+import v7Image from '../assets/cars/SYPHEX hypercar in moody studio__endoftext__.png';
+import gtrImage from '../assets/cars/Sleek black supercar at sunset.png';
 
 const CARS = [
   {
     name: 'SYPHEX X1',
-    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=80',
+    image: x1Image,
     price: '$89,000',
     stats: { acceleration: '2.3s', range: '750km', power: '900HP' },
   },
   {
     name: 'SYPHEX V7',
-    image: 'https://images.unsplash.com/photo-1611821064430-0d40291d8b82?w=800&q=80',
+    image: v7Image,
     price: '$129,000',
     stats: { acceleration: '1.9s', range: '680km', power: '1100HP' },
   },
   {
     name: 'SYPHEX GT-R',
-    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&q=80',
+    image: gtrImage,
     price: '$69,000',
     stats: { acceleration: '3.1s', range: '850km', power: '750HP' },
   },
