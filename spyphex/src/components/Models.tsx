@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import CarCard from './CarCard';
-import x1Image from '../assets/cars/SYPHEX electric car lineup in studio.png';
-import v7Image from '../assets/cars/SYPHEX hypercar in moody studio__endoftext__.png';
-import gtrImage from '../assets/cars/Sleek black supercar at sunset.png';
+import x1Image from '../assets/cars/Syphex-v1.png';
+import v7Image from '../assets/cars/Syphex-v2.png';
+import gtrImage from '../assets/cars/Syphex-v3.png';
 
 const CARS = [
   {
