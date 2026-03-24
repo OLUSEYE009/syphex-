@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import CarCard from './CarCard';
+import CarConfiguratorModal from './CarConfiguratorModal';
 import x1Image from '../assets/cars/Syphex-v1.png';
 import v7Image from '../assets/cars/Syphex-v2.png';
 import gtrImage from '../assets/cars/Syphex-v3.png';
@@ -26,6 +28,19 @@ const CARS = [
 ];
 
 const Models = () => {
+  const [selectedCar, setSelectedCar] = useState<typeof CARS[0] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleConfigure = (car: typeof CARS[0]) => {
+    setSelectedCar(car);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCar(null);
+  };
+
   return (
     <section id="models" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,10 +62,19 @@ const Models = () => {
               price={car.price}
               stats={car.stats}
               delay={index * 0.2}
+              onConfigure={() => handleConfigure(car)}
             />
           ))}
         </div>
       </div>
+
+      {selectedCar && (
+        <CarConfiguratorModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          car={selectedCar}
+        />
+      )}
     </section>
   );
 };

@@ -7,9 +7,10 @@ interface CarCardProps {
   price: string;
   stats: { acceleration: string; range: string; power: string };
   delay: number;
+  onConfigure: () => void;
 }
 
-const CarCard = ({ name, image, price, stats, delay }: CarCardProps) => {
+const CarCard = ({ name, image, price, stats, delay, onConfigure }: CarCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,7 +42,10 @@ const CarCard = ({ name, image, price, stats, delay }: CarCardProps) => {
             <span className="text-sm">{stats.power}</span>
           </div>
         </div>
-        <button className="w-full bg-[#1e2330] text-white py-3 rounded-lg font-medium hover:bg-[#3b82f6] transition-colors">
+        <button
+          onClick={onConfigure}
+          className="w-full bg-[#1e2330] text-white py-3 rounded-lg font-medium hover:bg-[#3b82f6] transition-colors"
+        >
           Configure & Order
         </button>
       </div>
