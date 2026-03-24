@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Hexagon } from 'lucide-react';
 
 const Navbar = () => {
@@ -23,10 +24,10 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <Hexagon className="w-8 h-8 text-[#3b82f6]" />
             <span className="text-xl font-bold tracking-wider font-heading">SYPHEX</span>
-          </div>
+          </Link>
           <div className="hidden md:flex space-x-8">
             <a href="#home" className="relative group">
               <span className="text-sm font-medium">Home</span>
@@ -45,9 +46,12 @@ const Navbar = () => {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#3b82f6] transition-all group-hover:w-full"></span>
             </a>
           </div>
-          <button className="hidden md:block bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-[#3b82f6] hover:text-white transition-colors">
+          <Link
+            to="/test-drive"
+            className="hidden md:block bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-[#3b82f6] hover:text-white transition-colors"
+          >
             Book Test Drive
-          </button>
+          </Link>
           <button onClick={() => setIsMobileNavOpen(!isMobileNavOpen)} className="md:hidden">
             <div className="w-6 h-6 flex flex-col justify-center">
               <span className={`block h-0.5 w-6 bg-white transition-transform ${isMobileNavOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`}></span>
@@ -69,9 +73,13 @@ const Navbar = () => {
             <a href="#models" className="block text-2xl font-bold" onClick={() => setIsMobileNavOpen(false)}>Models</a>
             <a href="#innovation" className="block text-2xl font-bold" onClick={() => setIsMobileNavOpen(false)}>Innovation</a>
             <a href="#contact" className="block text-2xl font-bold" onClick={() => setIsMobileNavOpen(false)}>Contact</a>
-            <button className="bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-[#3b82f6] hover:text-white transition-colors" onClick={() => setIsMobileNavOpen(false)}>
+            <Link
+              to="/test-drive"
+              className="bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-[#3b82f6] hover:text-white transition-colors inline-block"
+              onClick={() => setIsMobileNavOpen(false)}
+            >
               Book Test Drive
-            </button>
+            </Link>
           </div>
         </motion.div>
       )}

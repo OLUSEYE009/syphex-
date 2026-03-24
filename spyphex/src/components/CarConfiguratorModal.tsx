@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Palette, Settings } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface CarConfiguratorModalProps {
   isOpen: boolean;
@@ -57,6 +58,7 @@ const FEATURES = [
 ];
 
 const CarConfiguratorModal = ({ isOpen, onClose, car }: CarConfiguratorModalProps) => {
+  const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [selectedFeatures, setSelectedFeatures] = useState<Record<string, number>>({});
 
@@ -199,7 +201,18 @@ const CarConfiguratorModal = ({ isOpen, onClose, car }: CarConfiguratorModalProp
 
                 {/* Order Button - Fixed at bottom */}
                 <div className="p-4 sm:p-6 border-t border-[#1e2330] lg:border-t-0">
-                  <button className="w-full bg-[#3b82f6] text-white py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-[#2563eb] transition-colors">
+                  <button
+                    onClick={() => {
+                      const carConfig = {
+                        car,
+                        selectedColor,
+                        selectedFeatures,
+                        totalPrice: calculateTotalPrice(),
+                      };
+                      navigate('/checkout', { state: { carConfig } });
+                    }}
+                    className="w-full bg-[#3b82f6] text-white py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-[#2563eb] transition-colors"
+                  >
                     Order Now - ${calculateTotalPrice().toLocaleString()}
                   </button>
                 </div>
